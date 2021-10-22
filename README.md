@@ -1,7 +1,8 @@
 # Sanbovir Photo Inspector
 
-With this extension installed, the bug causing G-Earth not to be able to take photos will be fixed.
+_With this extension installed, the bug causing G-Earth not to be able to take photos will be fixed._
 
+Sanbovir Photo Inspector is a textual habbo photo manipulation tool
 
 Screenshots;
 
