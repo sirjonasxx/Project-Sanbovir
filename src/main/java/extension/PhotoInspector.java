@@ -5,7 +5,6 @@ import gearth.extensions.ExtensionForm;
 import gearth.extensions.ExtensionInfo;
 import gearth.protocol.HMessage;
 import gearth.protocol.HPacket;
-import gearth.ui.scheduler.InteractableScheduleItem;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
@@ -18,8 +17,6 @@ import photo.HPhoto;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -298,8 +295,6 @@ public class PhotoInspector extends ExtensionForm {
     }
 
     public void loadClick(ActionEvent actionEvent) {
-        List<InteractableScheduleItem> list = new ArrayList<>();
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load Photo File");
         fileChooser.getExtensionFilters().addAll(
