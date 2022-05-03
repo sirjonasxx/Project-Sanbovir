@@ -42,6 +42,8 @@ public class PhotoInspector extends ExtensionForm {
 
     public Label errorLbl;
 
+    private boolean capturedPhotoIsThumbnail = false;
+
 
     public void initialize() {
         cbEditMode.selectedProperty().addListener((ob, o, n) -> editControls.setDisable(!n));
@@ -51,10 +53,11 @@ public class PhotoInspector extends ExtensionForm {
 
     @Override
     protected void initExtension() {
-        intercept(HMessage.Direction.TOSERVER, "RenderRoom", this::onCameraRender);
+        intercept(HMessage.Direction.TOSERVER, "RenderRoom", (m) -> this.onCameraRender(m, false));
+        intercept(HMessage.Direction.TOSERVER, "RenderRoomThumbnail", (m) -> this.onCameraRender(m, true));
     }
 
-    private void onCameraRender(HMessage hMessage) {
+    private void onCameraRender(HMessage hMessage, boolean isThumbnail) {
         try {
             HPacket packet = hMessage.getPacket();
             int length = packet.readInteger();
@@ -65,7 +68,7 @@ public class PhotoInspector extends ExtensionForm {
             String photoJson = new String(decompressed, StandardCharsets.UTF_8);
 
             HPhoto photo = new HPhoto(photoJson);
-            onNewPhotoTaken(photo);
+            onNewPhotoTaken(photo, isThumbnail);
             maybeModifyPhoto(photo);
 
             String newPhoto = photo.getJsonData();
@@ -80,8 +83,9 @@ public class PhotoInspector extends ExtensionForm {
         }
     }
 
-    private void onNewPhotoTaken(HPhoto photo) {
+    private void onNewPhotoTaken(HPhoto photo, boolean isThumbnail) {
         if (rdCapture.isSelected()) {
+            capturedPhotoIsThumbnail = isThumbnail;
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             areaPlanes.setText(gson.toJson(photo.getPlanes()));
@@ -189,6 +193,8 @@ public class PhotoInspector extends ExtensionForm {
         Random rand = new Random();
         Gson gson = new Gson();
 
+        int dimensions = capturedPhotoIsThumbnail ? 110 : 320;
+
         try {
             JsonArray sprites = gson.fromJson(areaSprites.getText(), JsonArray.class);
 
@@ -196,10 +202,10 @@ public class PhotoInspector extends ExtensionForm {
                 JsonObject sprite = object.getAsJsonObject();
 
                 if (sprite.has("x"))
-                    sprite.addProperty("x", rand.nextInt(320) - 10);
+                    sprite.addProperty("x", rand.nextInt(dimensions) - 10);
 
                 if (sprite.has("y"))
-                    sprite.addProperty("y", rand.nextInt(320) - 10);
+                    sprite.addProperty("y", rand.nextInt(dimensions) - 10);
             }
 
             gson = new GsonBuilder().setPrettyPrinting().create();
