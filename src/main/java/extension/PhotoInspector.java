@@ -25,7 +25,7 @@ import java.util.zip.Inflater;
 @ExtensionInfo(
         Title =  "Project Sanbovir",
         Description =  "Habbo Photo Inspector",
-        Version =  "2.0",
+        Version =  "2.1",
         Author =  "sirjonasxx"
 )
 public class PhotoInspector extends ExtensionForm {
